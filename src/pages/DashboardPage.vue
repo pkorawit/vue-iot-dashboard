@@ -30,6 +30,16 @@
         </q-card>
       </div>
     </div>
+    <div class="row q-pa-md">
+      <div class="col q-pa-md">
+        <ApexChart width="100%" type="line" :options="chart.options" :series="chart.series"></ApexChart>
+      </div>
+      <div class="col q-pa-md">
+        <div class="col q-pa-md">
+        <ApexChart width="100%" type="bar" :options="chart.options" :series="chart.series"></ApexChart>
+      </div>
+      </div>
+    </div>
     <!-- <div class="row q-pa-md">
       <div class="col q-pa-md">
         <q-card dark bordered class="bg-info my-card">
@@ -70,9 +80,14 @@
 <script>
 import { defineComponent } from "vue";
 import * as mqtt from "mqtt/dist/mqtt";
+import ApexChart from "vue3-apexcharts";
 
 export default defineComponent({
   name: "DashboardPage",
+  components: {
+    ApexChart
+  },
+
   created() {
     const clientId = "mqttjs_" + Math.random().toString(8);
     const host = "ws://broker.hivemq.com:8000/mqtt";
@@ -102,6 +117,20 @@ export default defineComponent({
         temp: 0.0,
         humid: 0.0,
       },
+      chart : {
+        options: {
+        chart: {
+          id: 'vuechart-example'
+        },
+        xaxis: {
+          categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
+        }
+      },
+      series: [{
+        name: 'series-1',
+        data: [30, 40, 45, 50, 49, 60, 70, 91]
+      }]
+      }
     };
   },
   methods: {
