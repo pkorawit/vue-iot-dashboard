@@ -2,20 +2,6 @@
   <q-page>
     <div class="row q-pa-md">
       <div class="col q-pa-md">
-        <q-card dark bordered class="bg-primary my-card">
-          <q-card-section>
-            <div class="text-h6">Temperature</div>
-            <div class="text-subtitle2">celsius</div>
-          </q-card-section>
-
-          <q-separator dark inset />
-
-          <q-card-section>
-            <div class="text-h3 text-right">{{ dht22.temp }}</div>
-          </q-card-section>
-        </q-card>
-      </div>
-      <div class="col q-pa-md">
         <q-card dark bordered class="bg-secondary my-card">
           <q-card-section>
             <div class="text-h6">Humidity</div>
@@ -26,6 +12,20 @@
 
           <q-card-section>
             <div class="text-h3 text-right">{{ dht22.humid }}</div>
+          </q-card-section>
+        </q-card>
+      </div>
+      <div class="col q-pa-md">
+        <q-card dark bordered class="bg-primary my-card">
+          <q-card-section>
+            <div class="text-h6">Temperature</div>
+            <div class="text-subtitle2">celsius</div>
+          </q-card-section>
+
+          <q-separator dark inset />
+
+          <q-card-section>
+            <div class="text-h3 text-right">{{ dht22.temp }}</div>
           </q-card-section>
         </q-card>
       </div>
@@ -88,8 +88,8 @@ export default defineComponent({
           console.log(topic, message.toString());
           if (topic == "/manalab/dht22/") {
             const values = message.toString().split(",");
-            this.dht22.temp = values[0];
-            this.dht22.humid = values[1];
+            this.dht22.temp = values[1];
+            this.dht22.humid = values[0];
           }
         });
       }
