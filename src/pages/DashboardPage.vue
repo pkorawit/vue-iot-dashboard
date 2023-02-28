@@ -32,12 +32,22 @@
     </div>
     <div class="row q-pa-md">
       <div class="col q-pa-md">
-        <ApexChart width="100%" type="line" :options="chart.options" :series="chart.series"></ApexChart>
+        <ApexChart
+          width="100%"
+          type="area"
+          :options="humidChart.options"
+          :series="humidChart.series"
+        ></ApexChart>
       </div>
       <div class="col q-pa-md">
         <div class="col q-pa-md">
-        <ApexChart width="100%" type="bar" :options="chart.options" :series="chart.series"></ApexChart>
-      </div>
+          <ApexChart
+            width="100%"
+            type="area"
+            :options="tempChart.options"
+            :series="tempChart.series"
+          ></ApexChart>
+        </div>
       </div>
     </div>
     <!-- <div class="row q-pa-md">
@@ -85,7 +95,7 @@ import ApexChart from "vue3-apexcharts";
 export default defineComponent({
   name: "DashboardPage",
   components: {
-    ApexChart
+    ApexChart,
   },
 
   created() {
@@ -105,6 +115,22 @@ export default defineComponent({
             const values = message.toString().split(",");
             this.dht22.temp = values[1];
             this.dht22.humid = values[0];
+
+            this.humidChart.options.xaxis.categories.push(Date.now());
+            this.humidChart.options.xaxis.categories =
+              this.humidChart.options.xaxis.categories.slice(0, 10);
+            this.humidChart.series[0].data.push(this.dht22.humid);
+            this.humidChart.series[0].data =
+              this.humidChart.series[0].data.slice(0, 10);
+
+            this.tempChart.options.xaxis.categories.push(Date.now());
+            this.tempChart.options.xaxis.categories =
+              this.tempChart.options.xaxis.categories.slice(0, 10);
+            this.tempChart.series[0].data.push(this.dht22.temp);
+            this.tempChart.series[0].data = this.tempChart.series[0].data.slice(
+              0,
+              10
+            );
           }
         });
       }
@@ -117,26 +143,45 @@ export default defineComponent({
         temp: 0.0,
         humid: 0.0,
       },
-      chart : {
+      humidChart: {
         options: {
-        chart: {
-          id: 'vuechart-example'
+          chart: {
+            id: "DHT22-humid",
+          },
+          xaxis: {
+            categories: [],
+          },
+          colors: ['#26a69a']
         },
-        xaxis: {
-          categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
-        }
+        series: [
+          {
+            name: "time",
+            data: [],
+          },
+        ],
       },
-      series: [{
-        name: 'series-1',
-        data: [30, 40, 45, 50, 49, 60, 70, 91]
-      }]
-      }
+      tempChart: {
+        options: {
+          chart: {
+            id: "DHT22-temp",
+          },
+          xaxis: {
+            categories: [],
+          },
+        },
+        series: [
+          {
+            name: "time",
+            data: [],
+          },
+        ],
+      },
     };
   },
   methods: {
-    playSound(){
-      this.client.publish('/manalab/sound/', '1');
-    }
-  }
+    playSound() {
+      this.client.publish("/manalab/sound/", "1");
+    },
+  },
 });
 </script>
